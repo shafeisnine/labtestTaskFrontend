@@ -1,0 +1,112 @@
+<div fxLayout="row">
+  <div fxFlex="0 1 calc(70% - 10px)">
+    <h3>Syllabus List</h3>
+  </div>
+  <div fxFlex="0 1 calc(25% - 10px)">
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Search</mat-label>
+      <input matInput (keyup)="applyFilter($event)" #input />
+    </mat-form-field>
+  </div>
+  <div fxFlex="0 1 calc(5% - 10px)" style="text-align: right">
+    <button mat-mini-fab color="accent" [routerLink]="['/create']">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>
+
+<div fxLayout="column" style="overflow-y: auto">
+  <table mat-table [dataSource]="dataSource" matSort class="table-group">
+    <ng-container matColumnDef="sl">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>SL#</th>
+      <td mat-cell *matCellDef="let row; let i = index">
+        {{ paginator.pageIndex * paginator.pageSize + (i + 1) }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="syllabusName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Syllabus Name</th>
+      <td mat-cell *matCellDef="let row">{{ row?.syllabusName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="tradeName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Trade Name</th>
+      <td mat-cell *matCellDef="let row">{{ row?.tradeName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="labelName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Label</th>
+      <td mat-cell *matCellDef="let row">
+        {{ row?.labelName }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="uploadedSyllabus">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Syllabus</th>
+      <td mat-cell *matCellDef="let row">
+        <a [href]="row?.syllabusPath" target="_blank">{{
+          row?.uploadedSyllabus
+        }}</a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="uploadedTestPlan">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Test Plan</th>
+      <td mat-cell *matCellDef="let row">
+        <a [href]="row?.syllabusPath" target="_blank">{{
+          row?.uploadedTestPlan
+        }}</a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="developmentOfficer">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Development Officer
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row?.developmentOfficer }}</td>
+    </ng-container>
+    <ng-container matColumnDef="manager">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Manager</th>
+      <td mat-cell *matCellDef="let row">{{ row?.manager }}</td>
+    </ng-container>
+    language
+    <ng-container matColumnDef="language">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>language</th>
+      <td mat-cell *matCellDef="let row">
+        <span *ngFor="let language of row.language">
+          {{ language.shortName }}
+        </span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="activeDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Active Date</th>
+      <td mat-cell *matCellDef="let row">
+        {{ row?.activeDate | date: "dd/MM/yyyy" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <a [routerLink]="['edit/', row?._id]" mat-menu-item>Edit</a>
+          <button mat-menu-item (click)="onDeleteConfirmation(row._id)">
+            Delete
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    <tr
+      mat-header-row
+      *matHeaderRowDef="displayedColumns"
+      bgColor="accent"
+    ></tr>
+
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 15, 20]"
+    [style.display]="dataSource.data.length > 5 ? 'inline' : 'none'"
+  ></mat-paginator>
+</div>

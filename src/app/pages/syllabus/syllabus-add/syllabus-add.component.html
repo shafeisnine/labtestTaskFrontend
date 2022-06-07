@@ -1,0 +1,207 @@
+<div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+  <div fxFlex="0 1 calc(90% - 10px)">
+    <h3 *ngIf="!id">Syllabus Add</h3>
+    <h3 *ngIf="id">Syllabus Edit</h3>
+  </div>
+
+  <div fxFlex="0 1 calc(10% - 10px)" style="text-align: right">
+    <button mat-mini-fab color="accent" [routerLink]="['/']">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+</div>
+<div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column">
+  <form
+    [id]="formId"
+    [formGroup]="form"
+    (ngSubmit)="onAddSyllabus(form.value)"
+    novalidate
+  >
+    <div
+      fxLayout="coloum wrap"
+      fxLayoutGap="10px"
+      fxFlex="95%"
+      fxLayoutAlign="flex-start"
+    >
+      <mat-form-field fxFlex="0 1 calc(33.33% - 10px)" appearance="fill">
+        <mat-label>Select Trade</mat-label>
+        <mat-select
+          placeholder="Trade"
+          formControlName="tradeId"
+          (valueChange)="onChangeTrade($event)"
+          required
+        >
+          <mat-option *ngFor="let trade of tradeData" [value]="trade.tradeId"
+            >{{ trade?.tradeName }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="tradeId.invalid && (tradeId.dirty || tradeId.touched)"
+        >
+          <ng-container *ngIf="tradeId.hasError('required')"
+            >Trade is required.</ng-container
+          >
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field
+        fxFlex="0 1 calc(33.33% - 10px)"
+        fxFlex.xs="100%"
+        appearance="fill"
+      >
+        <mat-label>Select Label</mat-label>
+        <mat-select
+          formControlName="labelId"
+          (valueChange)="onChangeLabel($event)"
+          required
+        >
+          <mat-option *ngFor="let label of labelData" [value]="label._id"
+            >{{ label?.labelName }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="labelId.invalid && (labelId.dirty || labelId.touched)"
+        >
+          <ng-container *ngIf="labelId.hasError('required')"
+            >Label is required.</ng-container
+          >
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex="0 1 calc(33.33% - 10px)" appearance="fill">
+        <mat-label>Syllabus Name</mat-label>
+        <input matInput required formControlName="syllabusName" />
+        <mat-error
+          *ngIf="
+            syllabusName.invalid && (syllabusName.dirty || syllabusName.touched)
+          "
+        >
+          <ng-container *ngIf="syllabusName.hasError('required')"
+            >syllabus Name is required.</ng-container
+          >
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex="0 1 calc(33.33% - 10px)" appearance="fill">
+        <mat-label>Development Officer</mat-label>
+        <input matInput required formControlName="developmentOfficer" />
+        <mat-error
+          *ngIf="
+            developmentOfficer.invalid &&
+            (developmentOfficer.dirty || developmentOfficer.touched)
+          "
+        >
+          <ng-container *ngIf="developmentOfficer.hasError('required')"
+            >Development Officer is required.</ng-container
+          >
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field
+        fxFlex="0 1 calc(33.33% - 10px)"
+        fxFlex.md="0 1 calc(50% - 10px)"
+        fxFlex.sm="100%"
+        fxFlex.xs="100%"
+        appearance="fill"
+      >
+        <mat-label>Manager</mat-label>
+        <input matInput required formControlName="manager" />
+        <mat-error
+          *ngIf="manager.invalid && (manager.dirty || manager.touched)"
+        >
+          <ng-container *ngIf="manager.hasError('required')"
+            >manager is required.</ng-container
+          >
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex="0 1 calc(33.33% - 10px)" appearance="fill">
+        <mat-label>Active Date</mat-label>
+        <input
+          matInput
+          required
+          formControlName="activeDate"
+          [matDatepicker]="picker"
+        />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error
+          *ngIf="activeDate.invalid && (activeDate.dirty || activeDate.touched)"
+        >
+          <ng-container *ngIf="activeDate.hasError('required')"
+            >Active Date is required.</ng-container
+          >
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="0 1 calc(33% - 10px)" appearance="fill">
+        <mat-label>Upload Syllabus</mat-label>
+        <input
+          class="label-padding"
+          required
+          readonly
+          matInput
+          formControlName="uploadedSyllabus"
+          style="cursor: pointer"
+        />
+        <mat-icon
+          matSuffix
+          (click)="uploadedSyllabus.click()"
+          style="cursor: pointer"
+          >open_in_browser</mat-icon
+        >
+        <input
+          hidden
+          type="file"
+          placeholder="Upload Syllabus"
+          accept=".pdf,.doc"
+          capture
+          #uploadedSyllabus
+          (change)="syllabusFileUpload($event)"
+        />
+      </mat-form-field>
+      <mat-form-field fxFlex="0 1 calc(33% - 10px)" appearance="fill">
+        <mat-label>Upload Test Plan</mat-label>
+        <input
+          class="label-padding"
+          required
+          readonly
+          matInput
+          formControlName="uploadedTestPlan"
+          style="cursor: pointer"
+        />
+        <mat-icon
+          matSuffix
+          (click)="uploadedTestPlan.click()"
+          style="cursor: pointer"
+          >open_in_browser</mat-icon
+        >
+        <input
+          hidden
+          type="file"
+          placeholder="Upload Test Plan"
+          accept=".pdf,.doc"
+          capture
+          #uploadedTestPlan
+          (change)="testPlanFileUpload($event)"
+        />
+      </mat-form-field>
+    </div>
+  </form>
+  <div fxFlex="5%">
+    <div *ngFor="let item of languageData">
+      <mat-checkbox
+        (change)="$event ? onChangeLanguage($event, item) : null"
+        [(ngModel)]="item.checked"
+        >{{ item?.languageName }}
+      </mat-checkbox>
+    </div>
+  </div>
+</div>
+<div style="text-align: center">
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="!form.valid || selectedLanguage.length == 0"
+    type="submit"
+    [attr.form]="formId"
+  >
+    SAVE
+  </button>
+</div>
