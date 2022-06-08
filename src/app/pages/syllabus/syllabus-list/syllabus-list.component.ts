@@ -28,7 +28,7 @@ export class SyllabusListComponent implements OnInit, OnDestroy {
   ];
 
   syllabusListSub : Subscription;
-  deleteFIQuestionSub: Subscription;
+  deleteSyllabusSub: Subscription;
   dataSource = new MatTableDataSource<any>();
   resultsLength = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -72,7 +72,7 @@ export class SyllabusListComponent implements OnInit, OnDestroy {
   };
 
   deleteSyllabus = (id: string): void => {
-    this.deleteFIQuestionSub = this.syllabusService
+    this.deleteSyllabusSub = this.syllabusService
       .deleteSyllabus(id)
       .subscribe(
         (isDeleted: any) => {
@@ -90,8 +90,8 @@ export class SyllabusListComponent implements OnInit, OnDestroy {
   };
 
   ngOnDestroy(): void {
-    if (this.deleteFIQuestionSub) {
-      this.deleteFIQuestionSub.unsubscribe();
+    if (this.deleteSyllabusSub) {
+      this.deleteSyllabusSub.unsubscribe();
     }
     if (this.syllabusListSub) {
       this.syllabusListSub.unsubscribe();
