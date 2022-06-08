@@ -51,7 +51,7 @@
     <ng-container matColumnDef="uploadedTestPlan">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Test Plan</th>
       <td mat-cell *matCellDef="let row">
-        <a [href]="row?.syllabusPath" target="_blank">{{
+        <a [href]="row?.testPlanPath" target="_blank">{{
           row?.uploadedTestPlan
         }}</a>
       </td>

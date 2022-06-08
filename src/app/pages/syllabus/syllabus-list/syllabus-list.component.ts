@@ -2,8 +2,7 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { merge, of, Subscription } from 'rxjs';
-import { startWith, switchMap, map, catchError } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { SyllabusService } from '../syllabus.service';
 
@@ -27,7 +26,8 @@ export class SyllabusListComponent implements OnInit, OnDestroy {
     'activeDate',
     'actions',
   ];
-  authSub: Subscription;
+
+  syllabusListSub : Subscription;
   deleteFIQuestionSub: Subscription;
   dataSource = new MatTableDataSource<any>();
   resultsLength = 0;
@@ -48,29 +48,15 @@ export class SyllabusListComponent implements OnInit, OnDestroy {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  syllabusListGet = (): void => {
-    merge()
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          return this.syllabusService.syllabusList();
-        }),
-        map((data) => {
-          this.resultsLength = data.length;
-          return data;
-        }),
-        catchError(() => {
-          return of([] as any);
-        })
-      )
+  syllabusListGet = () => {
+    this.syllabusListSub = this.syllabusService
+      .syllabusList()
       .subscribe((data) => {
-        if (data) {
+        if (data && data.length) {
           this.dataSource.data = data && data.length ? data : [];
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
           this.syllabusData = data;
-        } else {
-          this.dataSource.data = [];
         }
       });
   };
@@ -104,11 +90,11 @@ export class SyllabusListComponent implements OnInit, OnDestroy {
   };
 
   ngOnDestroy(): void {
-    if (this.authSub) {
-      this.authSub.unsubscribe();
-    }
     if (this.deleteFIQuestionSub) {
       this.deleteFIQuestionSub.unsubscribe();
+    }
+    if (this.syllabusListSub) {
+      this.syllabusListSub.unsubscribe();
     }
   }
 }
